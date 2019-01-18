@@ -61,6 +61,13 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-
+router.get('/logout', function(req, res){
+  req.logout();
+  if(req.session.passport){
+    return res.json({success:false});
+  }else{
+    return res.json({success:true});
+  }
+});
 
 module.exports = router;
