@@ -5,6 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 
+//~line 7 after mongoose
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
+var passport = require('passport');
+
 var apiUsersRouter = require('./routes/api/users');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
