@@ -52,5 +52,5 @@ Users.pre('save', function(next){
 //Add unique validation properties to the model
 Users.plugin(uniqueValidator);
 
-User.plugin(passportLocalMongoose);
+Users.plugin(passportLocalMongoose);
 module.exports  = mongoose.model('Users', Users);

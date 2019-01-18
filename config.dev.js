@@ -15,5 +15,5 @@ config.session.secret = '7j&1tH!cr4F*1U';
 config.cookie.domain = 'localhost';
 
 
-config.mongodb='mondodb://localhost/mean-cms';
+config.mongodb='mongodb://localhost/mean-cms';
 module.exports = config;

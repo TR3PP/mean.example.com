@@ -8,10 +8,12 @@ var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var apiAuthRouter = require('./routes/api/auth');
 var apiUsersRouter = require('./routes/api/users');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var Users = require('./models/users');
+
 
 var app = express();
 
@@ -20,7 +22,7 @@ var config = require('./config.dev');
 
 //Connect to MongoDB
 mongoose.connect(config.mongodb, { useNewUrlParser: true });
-console.log(mongoose);
+//console.log(mongoose);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -71,6 +73,7 @@ passport.deserializeUser(function(user, done){
 });
 
 app.use('/', indexRouter);
+app.use('/api/auth', apiAuthRouter);
 app.use('/api/users', apiUsersRouter);
 app.use('/users', usersRouter);
 
