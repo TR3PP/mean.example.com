@@ -62,7 +62,9 @@ router.post('/login', function(req, res, next) {
 });
 
 router.get('/logout', function(req, res){
+  console.log(req.session);
   req.logout();
+  console.log(req.session);
   if(req.session.passport){
     return res.json({success:false});
   }else{
