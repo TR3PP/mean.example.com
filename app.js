@@ -74,13 +74,57 @@ passport.deserializeUser(function(user, done){
 //~line 73
 app.use(function(req,res,next){
   res.locals.session = req.session;
+  res.locals.showLogin = true;
+  if (req.session.passport){
+    if (req.session.passport.user){
+      res.locals.showLogin = false;
+    }
+  }
   next();
 });
 
-app.use('/auth', authRouter)
+//session based access control
+app.use(function(req,res,next){
+  //return next();  // linear top down flow, executes the next app.use | uncommented this line allows everything
+
+  //allow any endpoint tnat is an exact match.  The server does not have access to the hash
+  //so /auth and /auth#xx would both be considered exact matches
+  var whiteList = [
+    '/',
+    '/auth'
+  ];
+
+
+//console.log(req.url);
+
+  if (whiteList.indexOf(req.url)!==-1){
+    return next();
+  }
+
+  var subs = [
+    '/public/',
+    '/api/auth/'
+  ];
+
+  for (var sub of subs){
+    if (req.url.substring(0,sub.length)===sub){
+      return next();
+    }
+  }
+
+  if (req.isAuthenticated()){
+    return next();
+  }
+
+  return res.redirect('/auth#login');
+
+});
+
+
 app.use('/', indexRouter);
 app.use('/api/auth', apiAuthRouter);
 app.use('/api/users', apiUsersRouter);
+app.use('/auth', authRouter)
 app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
