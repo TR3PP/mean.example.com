@@ -61,15 +61,12 @@ router.post('/login', function(req, res, next) {
   })(req, res, next);
 });
 
-router.get('/logout', function(req, res){
-  console.log(req.session);
+router.delete('/logout', function(req, res){
   req.logout();
-  console.log(req.session);
-  if(req.session.passport){
-    return res.json({success:false});
-  }else{
-    return res.json({success:true});
+  if(!req.session.passport.user){
+    return res.json({success: 'true'});
   }
+  return res.json({success: 'false'});
 });
 
 module.exports = router;
