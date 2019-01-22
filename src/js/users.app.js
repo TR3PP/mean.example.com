@@ -110,6 +110,116 @@ var usersApp = (function() {
     app.innerHTML=form;
   }
 
+//~line 113
+function viewUser(id){
+
+  let uri = `${window.location.origin}/api/users/${id}`;
+  let xhr = new XMLHttpRequest();
+  xhr.open('GET', uri);
+
+  xhr.setRequestHeader(
+    'Content-Type',
+    'application/json; charset=UTF-8'
+  );
+
+  xhr.send();
+
+  xhr.onload = function(){
+    let app = document.getElementById('app');
+    let data = JSON.parse(xhr.response);
+    let card = '';
+
+    card = `<div class="card">
+      <div class="card-header clearfix">
+        <h2 class="h3 float-left">${data.user.first_name} ${data.user.last_name}</h2>
+        <div class="float-right">
+          <a href="#edit-${data.user._id}" class="btn btn-primary">Edit</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <div>${data.user.username}</div>
+        <div>${data.user.email}</div>
+      </div>
+    </div>`;
+
+    app.innerHTML = card;
+  }
+}
+//~line 148
+function editUser(id){
+
+  let uri = `${window.location.origin}/api/users/${id}`;
+  let xhr = new XMLHttpRequest();
+  xhr.open('GET', uri);
+
+  xhr.setRequestHeader(
+    'Content-Type',
+    'application/json; charset=UTF-8'
+  );
+
+  xhr.send();
+/*
+  xhr.onload = function(){
+    let data = JSON.parse(xhr.response);
+    console.log(data);
+  }
+ */
+
+ //~line 161
+xhr.onload = function(){
+  let app = document.getElementById('app');
+  let data = JSON.parse(xhr.response);
+
+  var form =  `
+    <div class="card">
+      <div class="card-header clearfix">
+        <h2 class="h3 float-left">Edit</h2>
+        <div class="float-right">
+          <a href="#" class="btn btn-primary">Cancel</a>
+        </div>
+      </div>
+      <div class="card-body">
+        <form id="editUser" class="card-body">
+          <input type="hidden" id="_id" name="_id" value="${data.user._id}">
+          <div id="formMsg" class="alert alert-danger text-center">Your form has errors</div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="first_name">First Name</label>
+              <input type="text" id="first_name" name="first_name" class="form-control" value="${data.user.first_name}" required>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="last_name">Last Name</label>
+              <input type="text" id="last_name" name="last_name" class="form-control" value="${data.user.last_name}" required>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-md-6">
+              <label for="username">Username</label>
+              <input type="text" id="username" name="username" class="form-control" value="${data.user.username}" required>
+            </div>
+
+            <div class="form-group col-md-6">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" class="form-control" value="${data.user.email}" required>
+            </div>
+          </div>
+
+          <div class="text-right">
+            <input type="submit" value="Submit" class="btn btn-lg btn-primary btn-sm-block">
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  app.innerHTML=form;
+}
+}
+
+
   function postRequest(formId, url){
     let form = document.getElementById(formId);
     form.addEventListener('submit', function(e){
@@ -154,11 +264,13 @@ var usersApp = (function() {
           break;
 
         case '#view':
-          console.log('VIEW');
+          viewUser(hashArray[1]);
+          //console.log('VIEW');
           break;
 
         case '#edit':
           console.log('EDIT');
+          editUser(hashArray[1]);
           break;
 
         case '#delete':
